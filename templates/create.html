@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <script type="text/javascript" src={{path}}></script>
+
+  <div class="container">
+    <div class="field">
+      <label class="label">Question</label>
+      <div class="control">
+        <input class="input" placeholder="Question" id="question"></input>
+      </div>
+
+      <label class="label">Answer</label>
+      <div class="control">
+        <textarea class="textarea" placeholder="Answer" id="answer"></textarea>
+      </div>
+
+      <label class="label">Category</label>
+      <div class="control">
+        <input class="input" placeholder="Question" id="category"></input>
+      </div>
+
+      <section class="section">
+        <button class="button is-primary" onclick="submitQuestion()">Submit Question</button>
+      </section>
+    </div>
+  </div>
+{% endblock %}
