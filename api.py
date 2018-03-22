@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, request
 from flask_classy import FlaskView, route
-import csv
+import csv, json
 
 QUESTIONS_LOCATION = 'questions.csv'
 
@@ -35,8 +35,14 @@ class ApiView(FlaskView):
                     output.append(question)
         return str(output)
 
+    @route("/post/", methods=['POST'])
+    def post(self):
+        question_info = json.loads(request.data)
 
-    def post(self, question, answer, category):
+        question = question_info["question"]
+        answer = question_info["answer"]
+        category = question_info["category"]
+
         questions.append([question, answer, category.lower()])
         with open(QUESTIONS_LOCATION, 'a') as csvfile:
             writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
