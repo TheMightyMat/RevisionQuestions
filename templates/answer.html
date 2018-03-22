@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <div class="container">
+      <section class="section">
+        <h1 class="title is-1">Question - {{ subject }}</h1>
+        <h1 class="subtitle is-2">{{ question }}</h1>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <button class="button is-info" onclick="submitQuestion()">View answer</button>
+          <a href="/subject/{{ subject }}">
+            <button class="button is-primary">Random question</button>
+          </a>
+        </div>
+      </section>
+  </div>
+{% endblock %}

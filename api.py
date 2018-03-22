@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, request
 from flask_classy import FlaskView, route
-import csv, json, string
+import csv, json, string, random
 
 QUESTIONS_LOCATION = 'questions.csv'
 
@@ -73,7 +73,8 @@ class WebAppView(FlaskView):
 
     def subject(self, category):
         questions = getQuestionsForCategory(category)
-        return str(questions)
+        question = random.choice(questions)
+        return render_template('answer.html', subject=category, question=question[QUESTION_INDEX])
 
 
 def getCategories():
