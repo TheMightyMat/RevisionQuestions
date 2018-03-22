@@ -74,7 +74,7 @@ class WebAppView(FlaskView):
     def subject(self, category):
         questions = getQuestionsForCategory(category)
         question = random.choice(questions)
-        return render_template('answer.html', subject=category, question=question[QUESTION_INDEX])
+        return render_template('answer.html', subject=category, question=question[QUESTION_INDEX], answer=question[ANSWER_INDEX], javascriptPath=url_for('static', filename='js/answerPage.js'))
 
 
 def getCategories():
