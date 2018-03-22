@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+<style>
+  .spacing {
+    margin-top: 1.5cm
+  }
+</style>
+
 <html>
   <head>
     <meta charset="utf-8">
@@ -6,19 +12,58 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css">
   </head>
   <body>
-    <section class="section">
-      <div class="hero">
-        <div class="container">
-          <a href="/">
-            <h1 class="title">Revision helper</h1>
-            <h2 class="subtitle">Revise by writing and answering questions!</h2>
+    <nav class="navbar is-fixed-top" role="navigation" aria-label-"main navigation">
+      <div class="container">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="/">
+            <h1 class="title is-4">Revision Helper</h1>
           </a>
+          <a class="navbar-item is-hidden-desktop" href="/create">Create</a>
+          <a class="navbar-item is-hidden-desktop" href="/subjects">Answer</a>
+        </div>
+        <div class="navbar-menu">
+          <div class="navbar-start"></div>
+          <div class="navbar-end">
+            <div class="navbar-item has-dropdown">
+              <a class="navbar-link">
+                Revise!
+              </a>
+              <div class="navbar-dropdown">
+                <a class="navbar-item" href="/create">Create</a>
+                <a class="navbar-item" href="/subjects">Answer</a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </section>
+    </nav>
+
+    <div class="spacing"></div>
 
     {% block body %}{% endblock %}
 
     <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    <script type="text/javascript">
+      var $dropdowns = document.querySelectorAll('.navbar-item.has-dropdown:not(.is-hoverable)');
+
+      if ($dropdowns.length > 0) {
+        $dropdowns.forEach(function ($el) {
+          $el.addEventListener('click', function (event) {
+            event.stopPropagation();
+            $el.classList.toggle('is-active');
+          });
+        });
+
+        document.addEventListener('click', function (event) {
+          closeDropdowns();
+        });
+      }
+
+      function closeDropdowns() {
+        $dropdowns.forEach(function ($el) {
+          $el.classList.remove('is-active');
+        });
+      }
+    </script>
   </body>
 </html>
