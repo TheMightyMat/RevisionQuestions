@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  {% for row in categories %}
+    <section class="section">
+      <div class="columns">
+        {% for category in row %}
+          <div class="column">
+            <a href="{{ '/subject/%s'%category.lower() }}">
+              <div class="hero is-primary">
+                <div class="hero-body">
+                  <h1 class="title">
+                    {{ category }}
+                  </h1>
+                </div>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+  {% endfor %}
+{% endblock %}

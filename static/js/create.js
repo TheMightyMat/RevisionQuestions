@@ -26,6 +26,6 @@ function submitQuestion() {
       }
     }
   } else {
-    alert("Must have a value for question, answer and category!");
+    alert("Must have a value for question, answer and subject!");
   }
 }

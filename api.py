@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, request
 from flask_classy import FlaskView, route
-import csv, json
+import csv, json, string
 
 QUESTIONS_LOCATION = 'questions.csv'
 
@@ -28,12 +28,7 @@ class ApiView(FlaskView):
 
     @route("/category/<category>")
     def get(self, category):
-        output = [];
-        for question in questions:
-            if len(question) == QUESTION_LENGTH:
-                if question[CATEGORY_INDEX].lower() == category.lower():
-                    output.append(question)
-        return str(output)
+        return str(getQuestionsForCategory(category))
 
     @route("/post/", methods=['POST'])
     def post(self):
@@ -51,13 +46,7 @@ class ApiView(FlaskView):
 
 
     def categories(self):
-        categories = []
-        for question in questions:
-            if len(question) == QUESTION_LENGTH:
-                catagory = question[CATEGORY_INDEX].lower()
-                if not catagory in categories:
-                    categories.append(catagory)
-        return str(categories)
+        return str(getCategories())
 
 
 class WebAppView(FlaskView):
@@ -66,8 +55,43 @@ class WebAppView(FlaskView):
         return render_template('home.html')
 
     def create(self):
-        return render_template('create.html', path=url_for('static', filename='js/create.js'))
+        return render_template('create.html', javascriptPath=url_for('static', filename='js/create.js'))
 
+    def subjects(self):
+        categoriesFormatted = [[]]
+        row = 0
+        column = 0
+        for category in getCategories():
+            categoriesFormatted[row].append(category)
+            column += 1
+            if (column >= 3):
+                column = 0
+                categoriesFormatted.append([])
+                row += 1
+
+        return render_template('subjects.html', categories=categoriesFormatted)
+
+    def subject(self, category):
+        questions = getQuestionsForCategory(category)
+        return str(questions)
+
+
+def getCategories():
+    categories = []
+    for question in questions:
+        if len(question) == QUESTION_LENGTH:
+            catagory = question[CATEGORY_INDEX].lower()
+            if not catagory.lower() in (name.lower() for name in categories):
+                categories.append(string.capwords(catagory))
+    return categories
+
+def getQuestionsForCategory(category):
+    output = [];
+    for question in questions:
+        if len(question) == QUESTION_LENGTH:
+            if question[CATEGORY_INDEX].lower() == category.lower():
+                output.append(question)
+    return output
 
 ApiView.register(app)
 WebAppView.register(app)
