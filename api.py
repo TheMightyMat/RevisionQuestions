@@ -102,4 +102,4 @@ if __name__ == '__main__':
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
         questions = list(reader)
 
-    app.run(debug=True)
+    app.run(debug=True, port=80)

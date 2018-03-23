@@ -1,10 +1,9 @@
 function submitQuestion() {
-  var api = "http://127.0.0.1:5000/api/post/"
+  var api = window.location.origin + "/api/post/"
 
   var question = document.getElementById("question").value;
   var answer = document.getElementById("answer").value;
   var category = document.getElementById("category").value;
-
   if ((question && answer && category) && !(question === "" || answer === "" || category === "")) {
     var xhttp = new XMLHttpRequest();
     xhttp.open("POST", api, true);
