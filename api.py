@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request
+from flask import Flask, render_template, url_for, request, flash, session, redirect
 from flask_classy import FlaskView, route
 import csv, json, string, random
 
@@ -76,6 +76,43 @@ class WebAppView(FlaskView):
         question = random.choice(questions)
         return render_template('answer.html', subject=category, question=question[QUESTION_INDEX], answer=question[ANSWER_INDEX], javascriptPath=url_for('static', filename='js/answerPage.js'))
 
+class LoginView(FlaskView):
+    def index(self):
+        return render_template('login.html')
+
+    def post(self):
+        # data = json.loads(request.data)
+
+        users = []
+        with open('users.csv') as usersFile:
+            users = list(csv.reader(usersFile, delimiter=",", quotechar='"'))
+
+        username = request.form["username"]
+        password_candidate = request.form["password"]
+
+        login_sucess = False
+        for user in users:
+            if user[0] == username:
+                if password_candidate == user[1]:
+                    login_sucess = True
+                    session['logged_in'] = True
+                    session['username'] = username
+
+                    flash('You are now logged in', 'success')
+                    return redirect(url_for('WebAppView:index'))
+
+        if not login_sucess:
+            error = "Incorrect login"
+            return render_template('login.html', error=error)
+        return render_template('login.html')
+
+
+class LogoutView(FlaskView):
+    def index(self):
+        session.clear()
+        flash('You are now logged out', 'success')
+        return redirect(url_for('WebAppView:index'))
+
 
 def getCategories():
     categories = []
@@ -96,8 +133,12 @@ def getQuestionsForCategory(category):
 
 ApiView.register(app)
 WebAppView.register(app)
+LoginView.register(app)
+LogoutView.register(app)
 
 if __name__ == '__main__':
+    app.secret_key = 'secret1234'
+
     with open(QUESTIONS_LOCATION, 'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
         questions = list(reader)

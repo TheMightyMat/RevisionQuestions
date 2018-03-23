@@ -25,6 +25,18 @@
         <div class="navbar-menu">
           <div class="navbar-start"></div>
           <div class="navbar-end">
+            {% if session.username %}
+              <div class="navbar-item">
+                <small>{{session.username}}</small>
+              </div>
+              <a class="navbar-item" href="/logout">
+                Log Out
+              </a>
+            {% else %}
+              <div class="navbar-item">
+                <a href="/login">Login</a>
+              </div>
+            {% endif %}
             <div class="navbar-item has-dropdown">
               <a class="navbar-link">
                 Revise!
