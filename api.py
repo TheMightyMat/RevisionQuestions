@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, request, flash, session, redirect
 from flask_classy import FlaskView, route
 from functools import wraps
-import csv, json, string, random
+import csv, json, string, random, hashlib
 
 QUESTIONS_LOCATION = 'questions.csv'
 
@@ -99,6 +99,8 @@ class SignUpView(FlaskView):
         username=request.form["username"]
         password=request.form["password"]
 
+        password_hash = hashlib.sha512(password.encode('utf-8')).hexdigest()
+
         existingUsers = []
         with open('users.csv') as usersFile:
             existingUsers = list(csv.reader(usersFile, delimiter=",", quotechar='"'))
@@ -109,9 +111,9 @@ class SignUpView(FlaskView):
 
         with open('users.csv', 'a') as usersFile:
             writer = csv.writer(usersFile, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
-            writer.writerow([username, password])
+            writer.writerow([username, password_hash])
 
-        flash('Account created, you can now log in!')
+        flash('Account created, you can now log in!', 'success')
         return redirect(url_for('WebAppView:index'))
 
 class LoginView(FlaskView):
@@ -128,10 +130,12 @@ class LoginView(FlaskView):
         username = request.form["username"]
         password_candidate = request.form["password"]
 
+        password_candidate_hash = hashlib.sha512(password_candidate.encode('utf-8')).hexdigest()
+
         login_sucess = False
         for user in users:
             if user[0] == username:
-                if password_candidate == user[1]:
+                if password_candidate_hash == user[1]:
                     login_sucess = True
                     session['logged_in'] = True
                     session['username'] = username
