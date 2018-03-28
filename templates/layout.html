@@ -21,6 +21,17 @@
           </a>
           <a class="navbar-item is-hidden-desktop" href="/create">Create</a>
           <a class="navbar-item is-hidden-desktop" href="/subjects">Answer</a>
+          {% if session.username %}
+            <div class="navbar-item is-hidden-desktop">
+              <small>{{session.username}}</small>
+            </div>
+            <a class="navbar-item is-hidden-desktop" href="/logout">
+              Log Out
+            </a>
+          {% else %}
+            <a class="navbar-item is-hidden-desktop" href="/login">Login</a>
+            <a class="navbar-item is-hidden-desktop" href="/signup">Sign Up</a>
+          {% endif %}
         </div>
         <div class="navbar-menu">
           <div class="navbar-start"></div>
@@ -33,9 +44,8 @@
                 Log Out
               </a>
             {% else %}
-              <div class="navbar-item">
-                <a href="/login">Login</a>
-              </div>
+              <a class="navbar-item" href="/login">Login</a>
+              <a class="navbar-item" href="/signup">Sign Up</a>
             {% endif %}
             <div class="navbar-item has-dropdown">
               <a class="navbar-link">

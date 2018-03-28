@@ -1,4 +1,4 @@
-function submitQuestion() {
+function submitQuestion(user) {
   var api = window.location.origin + "/api/post/"
 
   var question = document.getElementById("question").value;
@@ -9,7 +9,7 @@ function submitQuestion() {
     xhttp.open("POST", api, true);
     xhttp.setRequestHeader("Content-type", "application/json");
 
-    var data = JSON.stringify({"question": question, "answer": answer, "category": category})
+    var data = JSON.stringify({"question": question, "answer": answer, "category": category, "user": user})
 
     xhttp.send(data);
 

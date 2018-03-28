@@ -1,10 +1,11 @@
 from flask import Flask, render_template, url_for, request, flash, session, redirect
 from flask_classy import FlaskView, route
+from functools import wraps
 import csv, json, string, random
 
 QUESTIONS_LOCATION = 'questions.csv'
 
-QUESTION_LENGTH = 3
+QUESTION_LENGTH = 4
 QUESTION_INDEX = 0
 ANSWER_INDEX = 1
 CATEGORY_INDEX = 2
@@ -12,6 +13,16 @@ CATEGORY_INDEX = 2
 app = Flask(__name__)
 
 questions = []
+
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            flash('You must be logged in to do that, please log in', 'danger')
+            return redirect(url_for('LoginView:index'))
+    return wrap
 
 class ApiView(FlaskView):
     route_base = "/api/"
@@ -37,11 +48,12 @@ class ApiView(FlaskView):
         question = question_info["question"]
         answer = question_info["answer"]
         category = question_info["category"]
+        user = question_info["user"]
 
         questions.append([question, answer, category.lower()])
         with open(QUESTIONS_LOCATION, 'a') as csvfile:
             writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
-            writer.writerow([question, answer, category])
+            writer.writerow([question, answer, category, user])
         return "success", 200
 
 
@@ -51,9 +63,12 @@ class ApiView(FlaskView):
 
 class WebAppView(FlaskView):
     route_base = "/"
+
     def index(self):
         return render_template('home.html')
 
+    @route('/create/')
+    @login_required
     def create(self):
         return render_template('create.html', javascriptPath=url_for('static', filename='js/create.js'))
 
@@ -75,6 +90,29 @@ class WebAppView(FlaskView):
         questions = getQuestionsForCategory(category)
         question = random.choice(questions)
         return render_template('answer.html', subject=category, question=question[QUESTION_INDEX], answer=question[ANSWER_INDEX], javascriptPath=url_for('static', filename='js/answerPage.js'))
+
+class SignUpView(FlaskView):
+    def index(self):
+        return render_template('signup.html')
+
+    def post(self):
+        username=request.form["username"]
+        password=request.form["password"]
+
+        existingUsers = []
+        with open('users.csv') as usersFile:
+            existingUsers = list(csv.reader(usersFile, delimiter=",", quotechar='"'))
+
+        if username in [name[0] for name in existingUsers if name != []]:
+            error = 'Username already taken'
+            return render_template('signup.html', error=error)
+
+        with open('users.csv', 'a') as usersFile:
+            writer = csv.writer(usersFile, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
+            writer.writerow([username, password])
+
+        flash('Account created, you can now log in!')
+        return redirect(url_for('WebAppView:index'))
 
 class LoginView(FlaskView):
     def index(self):
@@ -116,9 +154,12 @@ class LogoutView(FlaskView):
 
 def getCategories():
     categories = []
+    app.logger.info(str(questions))
     for question in questions:
+        app.logger.info(question)
         if len(question) == QUESTION_LENGTH:
             catagory = question[CATEGORY_INDEX].lower()
+            app.logger.info(catagory)
             if not catagory.lower() in (name.lower() for name in categories):
                 categories.append(string.capwords(catagory))
     return categories
@@ -135,12 +176,14 @@ ApiView.register(app)
 WebAppView.register(app)
 LoginView.register(app)
 LogoutView.register(app)
+SignUpView.register(app)
 
 if __name__ == '__main__':
     app.secret_key = 'secret1234'
 
     with open(QUESTIONS_LOCATION, 'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-        questions = list(reader)
+        for row in reader:
+            questions.append(row)
 
     app.run(debug=True, port=80)
