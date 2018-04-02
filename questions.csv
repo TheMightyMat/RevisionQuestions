@@ -10,3 +10,10 @@
 "asihjkfdaugh","sdgfhd","sghdfujshgjds","TheMightyMat"
 "b'test'","b'Testing \xc2\xab\xcf\x84\xce\xb1\xd0\x91\xd0\xac\xe2\x84\x93\xcf\x83\xc2\xbb: 1<2 & 4+1>3, now 20% off!'","b'new category'","b'TheMightyMat'"
 "Unicode test!","Testing «ταБЬℓσ»: 1<2 & 4+1>3, now 20% off!","Unicode","TheMightyMat"
+"What would be the consequence of devices not being synchronised during synchronous data transmission?","Data could be lost or corrupted","Computing","TheMightyMat"
+"asdasd","asdasd","asdasda","TheMightyMat"
+"New line test","Hello
+- New line 1
+- New line 2
+
+Multiple new lines!","new lines","TheMightyMat"

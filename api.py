@@ -43,7 +43,7 @@ class ApiView(FlaskView):
 
     @route("/post/", methods=['POST'])
     def post(self):
-        question_info = json.loads(request.data)
+        question_info = json.loads(request.data.decode('utf-8'))
 
         question = question_info["question"]
         answer = question_info["answer"]
@@ -88,8 +88,9 @@ class WebAppView(FlaskView):
 
     def subject(self, category):
         questions = getQuestionsForCategory(category)
-        question = random.choice(questions)
-        return render_template('answer.html', subject=category, question=question[QUESTION_INDEX], answer=question[ANSWER_INDEX], javascriptPath=url_for('static', filename='js/answerPage.js'))
+        questionValues = random.choice(questions)
+        answer = questionValues[ANSWER_INDEX].split("\n")
+        return render_template('answer.html', subject=category, question=questionValues[QUESTION_INDEX], answer=answer, javascriptPath=url_for('static', filename='js/answerPage.js'))
 
 class SignUpView(FlaskView):
     def index(self):
