@@ -70,7 +70,7 @@ class WebAppView(FlaskView):
     @route('/create/')
     @login_required
     def create(self):
-        return render_template('create.html', javascriptPath=url_for('static', filename='js/create.js'))
+        return render_template('create.html', categories=getCategories(), javascriptPath=url_for('static', filename='js/create.js'))
 
     def subjects(self):
         categoriesFormatted = [[]]

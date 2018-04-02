@@ -17,7 +17,12 @@
 
       <label class="label">Subject</label>
       <div class="control">
-        <input class="input" placeholder="Subject" id="category"></input>
+        <input class="input" placeholder="Subject" id="category" list=datalist></input>
+        <datalist id="datalist">
+          {% for category in categories %}
+           <option value="{{category}}">
+          {% endfor %}
+        </datalist>
       </div>
 
       <section class="section">
