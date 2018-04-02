@@ -50,8 +50,8 @@ class ApiView(FlaskView):
         category = question_info["category"]
         user = question_info["user"]
 
-        questions.append([question, answer, category.lower()])
-        with open(QUESTIONS_LOCATION, 'a') as csvfile:
+        questions.append([question, answer, category.lower(), user])
+        with open(QUESTIONS_LOCATION, 'a', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
             writer.writerow([question, answer, category, user])
         return "success", 200
@@ -121,8 +121,6 @@ class LoginView(FlaskView):
         return render_template('login.html')
 
     def post(self):
-        # data = json.loads(request.data)
-
         users = []
         with open('users.csv') as usersFile:
             users = list(csv.reader(usersFile, delimiter=",", quotechar='"'))
@@ -157,6 +155,12 @@ class LogoutView(FlaskView):
 
 
 def getCategories():
+    questions = []
+    with open(QUESTIONS_LOCATION, 'r', encoding='utf-8') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        for row in reader:
+            questions.append(row)
+
     categories = []
     app.logger.info(str(questions))
     for question in questions:
@@ -169,6 +173,12 @@ def getCategories():
     return categories
 
 def getQuestionsForCategory(category):
+    questions = []
+    with open(QUESTIONS_LOCATION, 'r', encoding='utf-8') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        for row in reader:
+            questions.append(row)
+
     output = [];
     for question in questions:
         if len(question) == QUESTION_LENGTH:
@@ -185,7 +195,7 @@ SignUpView.register(app)
 if __name__ == '__main__':
     app.secret_key = 'secret1234'
 
-    with open(QUESTIONS_LOCATION, 'r') as csvfile:
+    with open(QUESTIONS_LOCATION, 'r', encoding='utf-8') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
         for row in reader:
             questions.append(row)
