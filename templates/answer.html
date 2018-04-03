@@ -17,7 +17,7 @@
         <section class="section">
           <h1 class="title is-1">Answer</h1>
           <h1 class="subtitle is-2">
-            {% for line in answer %}
+            {% for line in answerLines %}
               {{ line }}
               <br>
             {% endfor %}
@@ -31,6 +31,7 @@
           <a href="/subject/{{ subject }}">
             <button class="button is-primary">Random question</button>
           </a>
+          <button class="button is-warning" onclick="window.location.href='{{ url_for( 'WebAppView:edit', question='{{question}}', answer='{{answer}}' )}}'">Edit</button>
         </div>
       </section>
   </div>

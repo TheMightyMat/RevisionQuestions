@@ -7,17 +7,17 @@
     <div class="field">
       <label class="label">Question</label>
       <div class="control">
-        <input class="input" placeholder="Question" id="question"></input>
+        <input class="input" placeholder="Question" {% if questionName %} value="{{questionName}}" {% endif %} id="question"></input>
       </div>
 
       <label class="label">Answer</label>
       <div class="control">
-        <textarea class="textarea" placeholder="Answer" id="answer"></textarea>
+        <textarea class="textarea" placeholder="Answer" {% if questionAnswer %} value="{{questionAnswer}}" {% endif %} id="answer"></textarea>
       </div>
 
       <label class="label">Subject</label>
       <div class="control">
-        <input class="input" placeholder="Subject" id="category" list=datalist></input>
+        <input class="input" placeholder="Subject" {% if questionSubject %} value="{{questionSubject}}" {% endif %} id="category" list=datalist></input>
         <datalist id="datalist">
           {% for category in categories %}
            <option value="{{category}}">
