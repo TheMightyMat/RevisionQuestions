@@ -17,3 +17,4 @@
 - New line 2
 
 Multiple new lines!","new lines","TheMightyMat"
+"Pretty maths equations","This is an in-line \(\int_0^1 \frac{d\theta}{1+\theta^2} =\tan^{-1}\theta+C\) equation.","latex test","TheMightyMat"
