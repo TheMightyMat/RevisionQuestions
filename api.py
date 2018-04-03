@@ -236,6 +236,12 @@ def getNextKeyValue():
     return highest + 1
 
 def getQuestionById(id):
+    questions = []
+    with open(QUESTIONS_LOCATION, 'r', encoding='utf-8') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        for row in reader:
+            questions.append(row)
+
     for question in questions:
         if (len(question) == QUESTION_LENGTH):
             if int(question[PRIMARY_KEY]) == id:
