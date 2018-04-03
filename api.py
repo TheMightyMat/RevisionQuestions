@@ -59,9 +59,10 @@ class ApiView(FlaskView):
 
         questions.append([question, answer, category.lower(), user])
         with open(QUESTIONS_LOCATION, 'a', encoding='utf-8') as csvfile:
-            writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
-            writer.writerow([primary_key, question, answer, category, user])
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
+            writer.writerow({"primary_key": primary_key, "question": question, "answer": answer, "category": category, "user": user})
         return "success", 200
+
 
     @route("/put/<int:id>", methods=['PUT'])
     def put(self, id):
@@ -224,10 +225,10 @@ def getQuestionsForCategory(category):
 def getNextKeyValue():
     highest = 0
     with open(QUESTIONS_LOCATION, 'r', encoding='utf-8') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        reader = csv.DictReader(csvfile, fieldnames=fieldnames, delimiter=',', quotechar='"')
         for row in reader:
-            if (int(row[PRIMARY_KEY]) > highest):
-                highest = int(row[PRIMARY_KEY])
+            if (int(row["primary_key"]) > highest):
+                highest = int(row["primary_key"])
     return highest + 1
 
 def getQuestionById(id):
