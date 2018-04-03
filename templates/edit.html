@@ -7,17 +7,17 @@
     <div class="field">
       <label class="label">Question</label>
       <div class="control">
-        <input class="input" placeholder="Question" id="question"></input>
+        <input class="input" placeholder="Question" value="{{question}}" id="question"></input>
       </div>
 
       <label class="label">Answer</label>
       <div class="control">
-        <textarea class="textarea" placeholder="Answer" id="answer"></textarea>
+        <textarea class="textarea" placeholder="Answer" id="answer">{{answer}}</textarea>
       </div>
 
       <label class="label">Subject</label>
       <div class="control">
-        <input class="input" placeholder="Subject" id="category" list=datalist></input>
+        <input class="input" placeholder="Subject" value="{{category}}" id="category" list=datalist></input>
         <datalist id="datalist">
           {% for category in categories %}
            <option value="{{category}}">
@@ -26,7 +26,7 @@
       </div>
 
       <section class="section">
-        <button class="button is-primary" onclick="submitQuestion('{{session.username}}')">Submit Question</button>
+        <button class="button is-primary" onclick="editQuestion('{{questionId}}')">Save</button>
       </section>
     </div>
   </div>

@@ -102,10 +102,11 @@ class WebAppView(FlaskView):
     def create(self):
         return render_template('create.html', categories=getCategories(), javascriptPath=url_for('static', filename='js/create.js'))
 
-    @route('/edit/<questionId>')
+    @route('/edit/<int:questionId>')
     @login_required
-    def edit(self):
-        return render
+    def edit(self, questionId):
+        question = getQuestionById(questionId)
+        return render_template('edit.html', categories=getCategories(), questionId=questionId, question=question[QUESTION_INDEX], answer=question[ANSWER_INDEX], category=question[CATEGORY_INDEX], user=question[USER_INDEX], javascriptPath=url_for('static', filename='js/edit.js'))
 
     def subjects(self):
         categoriesFormatted = [[]]
@@ -123,12 +124,15 @@ class WebAppView(FlaskView):
 
     def subject(self, category):
         questions = getQuestionsForCategory(category)
-        questionValues = random.choice(questions)
-        answer = questionValues[ANSWER_INDEX].split("\n")
-        return render_template('answer.html', subject=category, question=questionValues[QUESTION_INDEX], answerLines=answer, answer=questionValues[ANSWER_INDEX], javascriptPath=url_for('static', filename='js/answerPage.js'))
+        questionId = int(random.choice(questions)[PRIMARY_KEY])
+        return redirect(url_for('WebAppView:question', id=questionId))
 
+
+    @route('/question/<int:id>')
     def question(self, id):
-        question = getQuestionById(id)
+        question=getQuestionById(id)
+        answer = question[ANSWER_INDEX].split("\n")
+        return render_template('answer.html', questionId=int(question[PRIMARY_KEY]), subject=question[CATEGORY_INDEX], question=question[QUESTION_INDEX], answerLines=answer, answer=question[ANSWER_INDEX], javascriptPath=url_for('static', filename='js/answerPage.js'))
 
 class SignUpView(FlaskView):
     def index(self):
@@ -233,8 +237,9 @@ def getNextKeyValue():
 
 def getQuestionById(id):
     for question in questions:
-        if int(question[PRIMARY_KEY]) == id:
-            return question
+        if (len(question) == QUESTION_LENGTH):
+            if int(question[PRIMARY_KEY]) == id:
+                return question
     return None
 
 ApiView.register(app)
