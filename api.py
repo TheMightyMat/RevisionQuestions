@@ -132,7 +132,7 @@ class WebAppView(FlaskView):
     def question(self, id):
         question=getQuestionById(id)
         answer = question[ANSWER_INDEX].split("\n")
-        return render_template('answer.html', questionId=int(question[PRIMARY_KEY]), subject=question[CATEGORY_INDEX], question=question[QUESTION_INDEX], answerLines=answer, answer=question[ANSWER_INDEX], javascriptPath=url_for('static', filename='js/answerPage.js'))
+        return render_template('answer.html', questionId=int(question[PRIMARY_KEY]), subject=string.capwords(question[CATEGORY_INDEX]), question=question[QUESTION_INDEX], answerLines=answer, answer=question[ANSWER_INDEX], javascriptPath=url_for('static', filename='js/answerPage.js'))
 
 class SignUpView(FlaskView):
     def index(self):
