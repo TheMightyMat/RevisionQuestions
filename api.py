@@ -2,15 +2,11 @@ from flask import Flask, render_template, url_for, request, flash, session, redi
 from flask_classy import FlaskView, route
 from functools import wraps
 import csv, json, string, random, hashlib, shutil
+import logging
 
 QUESTIONS_LOCATION = 'questions.csv'
 
 QUESTION_LENGTH = 5
-PRIMARY_KEY = 0
-QUESTION_INDEX = 1
-ANSWER_INDEX = 2
-CATEGORY_INDEX = 3
-USER_INDEX = 4
 
 fieldnames = ["primary_key", "question", "answer", "category", "user"]
 
@@ -57,7 +53,7 @@ class ApiView(FlaskView):
         category = question_info["category"]
         user = question_info["user"]
 
-        questions.append([question, answer, category.lower(), user])
+        questions.append({"primary_key": primary_key, "question": question, "answer": answer, "category": category.lower(), "user": user})
         with open(QUESTIONS_LOCATION, 'a', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
             writer.writerow({"primary_key": primary_key, "question": question, "answer": answer, "category": category, "user": user})
@@ -106,7 +102,7 @@ class WebAppView(FlaskView):
     @login_required
     def edit(self, questionId):
         question = getQuestionById(questionId)
-        return render_template('edit.html', categories=getCategories(), questionId=questionId, question=question[QUESTION_INDEX], answer=question[ANSWER_INDEX], category=question[CATEGORY_INDEX], user=question[USER_INDEX], javascriptPath=url_for('static', filename='js/edit.js'))
+        return render_template('edit.html', categories=getCategories(), questionId=questionId, question=question["question"], answer=question["question"], category=question["category"], user=question["user"], javascriptPath=url_for('static', filename='js/edit.js'))
 
     def subjects(self):
         categoriesFormatted = [[]]
@@ -124,15 +120,15 @@ class WebAppView(FlaskView):
 
     def subject(self, category):
         questions = getQuestionsForCategory(category)
-        questionId = int(random.choice(questions)[PRIMARY_KEY])
+        questionId = int(random.choice(questions)["primary_key"])
         return redirect(url_for('WebAppView:question', id=questionId))
 
 
     @route('/question/<int:id>')
     def question(self, id):
         question=getQuestionById(id)
-        answer = question[ANSWER_INDEX].split("\n")
-        return render_template('answer.html', questionId=int(question[PRIMARY_KEY]), subject=string.capwords(question[CATEGORY_INDEX]), question=question[QUESTION_INDEX], answerLines=answer, answer=question[ANSWER_INDEX], javascriptPath=url_for('static', filename='js/answerPage.js'))
+        answer = question["answer"].split("\n")
+        return render_template('answer.html', questionId=int(question["primary_key"]), subject=string.capwords(question["category"]), question=question["question"], answerLines=answer, answer=question["answer"], javascriptPath=url_for('static', filename='js/answerPage.js'))
 
 class SignUpView(FlaskView):
     def index(self):
@@ -200,29 +196,29 @@ class LogoutView(FlaskView):
 def getCategories():
     questions = []
     with open(QUESTIONS_LOCATION, 'r', encoding='utf-8') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        reader = csv.DictReader(csvfile, fieldnames=fieldnames, delimiter=',', quotechar='"')
         for row in reader:
             questions.append(row)
 
     categories = []
     for question in questions:
         if len(question) == QUESTION_LENGTH:
-            catagory = question[CATEGORY_INDEX].lower()
-            if not catagory.lower() in (name.lower() for name in categories):
-                categories.append(string.capwords(catagory))
+            category = question["category"].lower()
+            if not category.lower() in (name.lower() for name in categories):
+                categories.append(string.capwords(category))
     return categories
 
 def getQuestionsForCategory(category):
     questions = []
     with open(QUESTIONS_LOCATION, 'r', encoding='utf-8') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        reader = csv.DictReader(csvfile, fieldnames=fieldnames, delimiter=',', quotechar='"')
         for row in reader:
             questions.append(row)
 
     output = [];
     for question in questions:
         if len(question) == QUESTION_LENGTH:
-            if question[CATEGORY_INDEX].lower() == category.lower():
+            if question["category"].lower() == category.lower():
                 output.append(question)
     return output
 
@@ -238,13 +234,13 @@ def getNextKeyValue():
 def getQuestionById(id):
     questions = []
     with open(QUESTIONS_LOCATION, 'r', encoding='utf-8') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        reader = csv.DictReader(csvfile, fieldnames=fieldnames, delimiter=',', quotechar='"')
         for row in reader:
             questions.append(row)
 
     for question in questions:
         if (len(question) == QUESTION_LENGTH):
-            if int(question[PRIMARY_KEY]) == id:
+            if int(question["primary_key"]) == id:
                 return question
     return None
 
@@ -258,7 +254,7 @@ if __name__ == '__main__':
     app.secret_key = 'secret1234'
 
     with open(QUESTIONS_LOCATION, 'r', encoding='utf-8') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        reader = csv.DictReader(csvfile, fieldnames=fieldnames, delimiter=',', quotechar='"')
         for row in reader:
             questions.append(row)
 
