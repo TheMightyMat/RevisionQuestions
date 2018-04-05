@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=TeX-MML-AM_CHTML" async></script>
+{% endblock %}
+
+{% block body %}
+  <script type="text/javascript" src={{javascriptPath}}></script>
+  <div class="container">
+    <h1 class="title is-1">{{questionsTitle}}</h1>
+    <table class="table is-hoverable is-fullwidth">
+      <tr>
+        <th>
+          Question
+        </th>
+        <th>
+          Category
+        </th>
+        <th>
+          Creator
+        </th>
+      </tr>
+      {% for question in questionsList %}
+        <tr>
+          <td>
+            <a href="/question/{{question['primary_key']}}">
+              {{question["question"]}}
+            </a>
+          </td>
+          <td>
+            <a href="/subject/{{question['category']}}">
+              {{question["category"]}}
+            </a>
+          </td>
+          <td>
+            <a href="/user/{{question['user']}}">
+              {{question["user"]}}
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+{% endblock %}

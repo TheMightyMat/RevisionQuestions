@@ -38,9 +38,9 @@
           <div class="navbar-start"></div>
           <div class="navbar-end">
             {% if session.username %}
-              <div class="navbar-item">
+              <a class="navbar-item" href="/user/{{session.username}}">
                 <small>{{session.username}}</small>
-              </div>
+              </a>
               <a class="navbar-item" href="/logout">
                 Log Out
               </a>

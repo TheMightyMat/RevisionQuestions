@@ -41,7 +41,7 @@ class ApiView(FlaskView):
 
     @route("/category/<category>")
     def get(self, category):
-        return str(getQuestionsForCategory(category))
+        return str(getQuestionsByColumn(category, "category"))
 
     @route("/post/", methods=['POST'])
     def post(self):
@@ -119,16 +119,26 @@ class WebAppView(FlaskView):
         return render_template('subjects.html', categories=categoriesFormatted)
 
     def subject(self, category):
-        questions = getQuestionsForCategory(category)
-        questionId = int(random.choice(questions)["primary_key"])
-        return redirect(url_for('WebAppView:question', id=questionId))
+        categoryQuestions = getQuestionsByColumn(category, "category")
+        return render_template('questionList.html', questionsTitle=category, questionsList=categoryQuestions)
+
+
+    def random(self, category):
+        categoryQuestions = getQuestionsByColumn(category, "category")
+        questionId = random.choice(categoryQuestions)["primary_key"]
+        return redirect(url_for("WebAppView:question", id=int(questionId)))
 
 
     @route('/question/<int:id>')
     def question(self, id):
         question=getQuestionById(id)
         answer = question["answer"].split("\n")
-        return render_template('answer.html', questionId=int(question["primary_key"]), subject=string.capwords(question["category"]), question=question["question"], answerLines=answer, answer=question["answer"], javascriptPath=url_for('static', filename='js/answerPage.js'))
+        return render_template('question.html', questionId=int(question["primary_key"]), subject=string.capwords(question["category"]), question=question["question"], answerLines=answer, answer=question["answer"], javascriptPath=url_for('static', filename='js/answerPage.js'))
+
+    def user(self, user):
+        userQuestions = getQuestionsByColumn(user, "user")
+        return render_template('questionList.html', questionsTitle=user, questionsList=userQuestions)
+
 
 class SignUpView(FlaskView):
     def index(self):
@@ -208,17 +218,18 @@ def getCategories():
                 categories.append(string.capwords(category))
     return categories
 
-def getQuestionsForCategory(category):
+
+def getQuestionsByColumn(value, columnName):
     questions = []
     with open(QUESTIONS_LOCATION, 'r', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile, fieldnames=fieldnames, delimiter=',', quotechar='"')
         for row in reader:
             questions.append(row)
 
-    output = [];
+    output = []
     for question in questions:
         if len(question) == QUESTION_LENGTH:
-            if question["category"].lower() == category.lower():
+            if question[columnName].lower() == value.lower():
                 output.append(question)
     return output
 
