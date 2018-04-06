@@ -11,6 +11,7 @@ QUESTION_LENGTH = 5
 fieldnames = ["primary_key", "question", "answer", "category", "user"]
 
 app = Flask(__name__)
+app.secret_key = 'secret1234'
 
 questions = []
 
@@ -102,7 +103,7 @@ class WebAppView(FlaskView):
     @login_required
     def edit(self, questionId):
         question = getQuestionById(questionId)
-        return render_template('edit.html', categories=getCategories(), questionId=questionId, question=question["question"], answer=question["question"], category=question["category"], user=question["user"], javascriptPath=url_for('static', filename='js/edit.js'))
+        return render_template('edit.html', categories=getCategories(), questionId=questionId, question=question["question"], answer=question["answer"], category=question["category"], user=question["user"], javascriptPath=url_for('static', filename='js/edit.js'))
 
     def subjects(self):
         categoriesFormatted = [[]]
@@ -262,8 +263,6 @@ LogoutView.register(app)
 SignUpView.register(app)
 
 if __name__ == '__main__':
-    app.secret_key = 'secret1234'
-
     with open(QUESTIONS_LOCATION, 'r', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile, fieldnames=fieldnames, delimiter=',', quotechar='"')
         for row in reader:
