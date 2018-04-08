@@ -26,7 +26,9 @@
           <a href="/random/{{ subject }}">
             <button class="button is-primary">Random question</button>
           </a>
-          <button class="button is-warning" onclick="window.location.href='{{ url_for( 'WebAppView:edit', questionId = questionId )}}'">Edit</button>
+          {% if session.username == user %}
+            <button class="button is-warning" onclick="window.location.href='{{ url_for( 'WebAppView:edit', questionId = questionId )}}'">Edit</button>
+          {% endif %}
         </div>
       </section>
   </div>

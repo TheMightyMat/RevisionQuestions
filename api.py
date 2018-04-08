@@ -134,7 +134,7 @@ class WebAppView(FlaskView):
     def question(self, id):
         question=getQuestionById(id)
         answer = question["answer"].split("\n")
-        return render_template('question.html', questionId=int(question["primary_key"]), subject=string.capwords(question["category"]), question=question["question"], answerLines=answer, answer=question["answer"], javascriptPath=url_for('static', filename='js/answerPage.js'))
+        return render_template('question.html', questionId=int(question["primary_key"]), subject=string.capwords(question["category"]), question=question["question"], answerLines=answer, answer=question["answer"], user=question["user"], javascriptPath=url_for('static', filename='js/answerPage.js'))
 
     def user(self, user):
         userQuestions = getQuestionsByColumn(user, "user")
