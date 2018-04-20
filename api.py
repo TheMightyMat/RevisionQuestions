@@ -136,8 +136,8 @@ class WebAppView(FlaskView):
     @route('/question/<int:id>')
     def question(self, id):
         question=getQuestionById(id)
-        answer = question["answer"].split("\n")
-        return render_template('question.html', questionId=int(question["primary_key"]), subject=string.capwords(question["category"]), question=question["question"], answerLines=answer, answer=question["answer"], user=question["user"], javascriptPath=url_for('static', filename='js/answerPage.js'))
+        category = question["category"]
+        return render_template('question.html', questionId=id, subject=string.capwords(category), question=question["question"], answer=question["answer"], user=question["user"], nextQuestion=getNextQuestionId(id, category), javascriptPath=url_for('static', filename='js/answerPage.js'))
 
     def user(self, user):
         userQuestions = getQuestionsByColumn(user, "user")
@@ -206,6 +206,17 @@ class LogoutView(FlaskView):
         session.clear()
         flash('You are now logged out', 'success')
         return redirect(url_for('WebAppView:index'))
+
+
+def getNextQuestionId(currentId, category):
+    questions = getQuestionsByColumn(category, "category")
+    for index, question in enumerate(questions):
+        if int(question["primary_key"]) == int(currentId):
+            if (index + 1 < len(questions)):
+                return questions[index + 1]["primary_key"]
+            else:
+                return questions[0]["primary_key"]
+    return None
 
 
 def getCategories():
