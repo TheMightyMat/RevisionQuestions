@@ -103,6 +103,9 @@ class WebAppView(FlaskView):
     @login_required
     def edit(self, questionId):
         question = getQuestionById(questionId)
+        if (question["user"].lower() != session["username"].lower()):
+            flash("You can only edit your own questions!", "danger")
+            return redirect(url_for('WebAppView:index'))
         return render_template('edit.html', categories=getCategories(), questionId=questionId, question=question["question"], answer=question["answer"], category=question["category"], user=question["user"], javascriptPath=url_for('static', filename='js/edit.js'))
 
     def subjects(self):
