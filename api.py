@@ -182,14 +182,15 @@ class LoginView(FlaskView):
 
         login_sucess = False
         for user in users:
-            if user[0] == username:
-                if password_candidate_hash == user[1]:
-                    login_sucess = True
-                    session['logged_in'] = True
-                    session['username'] = username
+            if len(user) == 2:
+                if user[0] == username:
+                    if password_candidate_hash == user[1]:
+                        login_sucess = True
+                        session['logged_in'] = True
+                        session['username'] = username
 
-                    flash('You are now logged in', 'success')
-                    return redirect(url_for('WebAppView:index'))
+                        flash('You are now logged in', 'success')
+                        return redirect(url_for('WebAppView:index'))
 
         if not login_sucess:
             error = "Incorrect login"
