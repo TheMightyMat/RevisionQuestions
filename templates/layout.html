@@ -23,9 +23,9 @@
           <a class="navbar-item is-hidden-desktop" href="/create">Create</a>
           <a class="navbar-item is-hidden-desktop" href="/subjects">Answer</a>
           {% if session.username %}
-            <div class="navbar-item is-hidden-desktop">
-              <small>{{session.username}}</small>
-            </div>
+          <a class="navbar-item is-hidden-desktop" href="/user/{{session.username}}">
+            <small>{{session.username}}</small>
+          </a>
             <a class="navbar-item is-hidden-desktop" href="/logout">
               Log Out
             </a>
