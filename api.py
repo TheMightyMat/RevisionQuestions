@@ -4,7 +4,8 @@ from functools import wraps
 import csv, json, string, random, hashlib, shutil
 import logging
 
-QUESTIONS_LOCATION = 'questions.csv'
+QUESTIONS_LOCATION = '/var/www/html/RevisionQuestions/questions.csv'
+USERS_LOCATION = '/var/www/html/RevisionQuestions/users.csv'
 
 QUESTION_LENGTH = 5
 
@@ -155,14 +156,14 @@ class SignUpView(FlaskView):
         password_hash = hashlib.sha512(password.encode('utf-8')).hexdigest()
 
         existingUsers = []
-        with open('users.csv') as usersFile:
+        with open(USERS_LOCATION) as usersFile:
             existingUsers = list(csv.reader(usersFile, delimiter=",", quotechar='"'))
 
         if username in [name[0] for name in existingUsers if name != []]:
             error = 'Username already taken'
             return render_template('signup.html', error=error)
 
-        with open('users.csv', 'a') as usersFile:
+        with open(USERS_LOCATION, 'a') as usersFile:
             writer = csv.writer(usersFile, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
             writer.writerow([username, password_hash])
 
@@ -175,7 +176,7 @@ class LoginView(FlaskView):
 
     def post(self):
         users = []
-        with open('users.csv') as usersFile:
+        with open(USERS_LOCATION) as usersFile:
             users = list(csv.reader(usersFile, delimiter=",", quotechar='"'))
 
         username = request.form["username"]
