@@ -6,6 +6,7 @@ import logging
 
 QUESTIONS_LOCATION = '/var/www/html/RevisionQuestions/questions.csv'
 USERS_LOCATION = '/var/www/html/RevisionQuestions/users.csv'
+TEMP_LOCATION = '/var/www/html/RevisionQuestions/temp.csv'
 
 QUESTION_LENGTH = 5
 
@@ -70,7 +71,7 @@ class ApiView(FlaskView):
         answer = question_info["answer"]
         category = question_info["category"]
 
-        with open(QUESTIONS_LOCATION, 'r') as csvFile, open("temp.csv", 'w') as output:
+        with open(QUESTIONS_LOCATION, 'r') as csvFile, open(TEMP_LOCATION, 'w') as output:
             reader = csv.DictReader(csvFile, fieldnames=fieldnames, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
             writer = csv.DictWriter(output, fieldnames=fieldnames, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
 
@@ -82,7 +83,7 @@ class ApiView(FlaskView):
 
                 writer.writerow({'primary_key': row['primary_key'], 'question': row['question'], 'answer': row['answer'], 'category': row['category'], 'user': row['user']})
 
-        shutil.move("temp.csv", QUESTIONS_LOCATION)
+        shutil.move(TEMP_LOCATION, QUESTIONS_LOCATION)
         return "success", 200
 
     def categories(self):
