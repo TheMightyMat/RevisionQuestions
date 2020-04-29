@@ -86,6 +86,19 @@ class ApiView(FlaskView):
         shutil.move(TEMP_LOCATION, QUESTIONS_LOCATION)
         return "success", 200
 
+    @route("/delete/<int:id>", methods=['DELETE'])
+    def delete(self, id):
+        with open(QUESTIONS_LOCATION, 'r') as csvFile, open(TEMP_LOCATION, 'w') as output:
+            reader = csv.DictReader(csvFile, fieldnames=fieldnames, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
+            writer = csv.DictWriter(output, fieldnames=fieldnames, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
+
+            for row in reader:
+                if id != int(row["primary_key"]):
+                    writer.writerow({'primary_key': row['primary_key'], 'question': row['question'], 'answer': row['answer'], 'category': row['category'], 'user': row['user']})
+
+        shutil.move(TEMP_LOCATION, QUESTIONS_LOCATION)
+        return "success", 200
+
     def categories(self):
         return str(getCategories())
 
@@ -109,6 +122,15 @@ class WebAppView(FlaskView):
             flash("You can only edit your own questions!", "danger")
             return redirect(url_for('WebAppView:index'))
         return render_template('edit.html', categories=getCategories(), questionId=questionId, question=question["question"], answer=question["answer"], category=question["category"], user=question["user"], javascriptPath=url_for('static', filename='js/edit.js'))
+
+    @route('/delete/<int:questionId>')
+    @login_required
+    def edit(self, questionId):
+        question = getQuestionById(questionId)
+        if (question["user"].lower() != session["username"].lower()):
+            flash("You can only delete your own questions!", "danger")
+            return redirect(url_for('WebAppView:index'))
+        return render_template('delete.html', questionId=questionId, question=question["question"], user=question["user"], javascriptPath=url_for('static', filename='js/delete.js'))
 
     def subjects(self):
         categoriesFormatted = [[]]
