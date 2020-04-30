@@ -125,7 +125,7 @@ class WebAppView(FlaskView):
 
     @route('/delete/<int:questionId>')
     @login_required
-    def edit(self, questionId):
+    def delete(self, questionId):
         question = getQuestionById(questionId)
         if (question["user"].lower() != session["username"].lower()):
             flash("You can only delete your own questions!", "danger")

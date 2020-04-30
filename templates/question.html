@@ -40,7 +40,7 @@
             <button class="button is-warning" onclick="window.location.href='{{ url_for( 'WebAppView:edit', questionId = questionId )}}'">Edit</button>
           {% endif %}
 		  {% if session.username == user %}
-            <button class="button is-danger" onclick="window.location.href='{{ url_for( 'WebAppView:edit', questionId = questionId )}}'">Delete</button>
+            <button class="button is-danger" onclick="window.location.href='{{ url_for( 'WebAppView:delete', questionId = questionId )}}'">Delete</button>
           {% endif %}
         </div>
       </section>
