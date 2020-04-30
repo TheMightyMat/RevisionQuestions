@@ -1,16 +1,14 @@
 {% extends 'layout.html' %}
 
 {% block head %}
-  <script type="text/javascript" async
-    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=TeX-MML-AM_CHTML" async></script>
+	<script type="text/javascript" src={{javascriptPath}}></script>
 {% endblock %}
 
 {% block body %}
-    <script type="text/javascript" src={{javascriptPath}}></script>
     <div class="container">
       <section class="section">
         <h1 class="title is-1">Question - {{ subject }}</h1>
-        <h1 class="subtitle is-2">{{ question }}</h1>
+        <h1 class="subtitle is-2 markdown">{{ question }}</h1>
       </section>
 
       <section class="section">
@@ -23,7 +21,7 @@
       <div class="container" id="answerDiv" style="visibility: hidden; height: 0px">
         <section class="section">
           <h1 class="title is-1">Answer</h1>
-          <h1 class="subtitle is-2" style="white-space: pre-line;">{{ answer }}</h1>
+          <h1 class="subtitle is-2 markdown" style="white-space: pre-line;">{{ answer }}</h1>
         </section>
       </div>
 

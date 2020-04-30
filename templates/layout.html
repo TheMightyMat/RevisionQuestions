@@ -11,9 +11,24 @@
     <title>Revision Helper</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+	<script src="{{url_for('static', filename='js/markdown.js')}}"></script>
+	<script>
+		MathJax = {
+		tex: {
+			inlineMath: [['$', '$'], ['\\(', '\\)']]
+		},
+		svg: {
+			fontCache: 'global'
+		}
+		};
+	</script>
+	<script type="text/javascript" id="MathJax-script" async
+		src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+	</script>
     {% block head %}{% endblock %}
   </head>
-  <body>
+  <body onload="markdown()">
     <nav class="navbar is-fixed-top" role="navigation" aria-label-"main navigation">
       <div class="container">
         <div class="navbar-brand">
