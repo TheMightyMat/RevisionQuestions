@@ -1,108 +1,116 @@
 <!DOCTYPE html>
 <style>
-  .spacing {
-    margin-top: 1.5cm
-  }
+	.spacing {
+		margin-top: 1.5cm
+	}
+
+	ul {
+		list-style: disc inside !important;
+	}
 </style>
 
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Revision Helper</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-	<script src="{{url_for('static', filename='js/markdown.js')}}"></script>
-	<script>
-		MathJax = {
-		tex: {
-			inlineMath: [['$', '$'], ['\\(', '\\)']]
-		},
-		svg: {
-			fontCache: 'global'
-		}
-		};
-	</script>
-	<script type="text/javascript" id="MathJax-script" async
-		src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
-	</script>
-    {% block head %}{% endblock %}
-  </head>
-  <body onload="markdown()">
-    <nav class="navbar is-fixed-top" role="navigation" aria-label-"main navigation">
-      <div class="container">
-        <div class="navbar-brand">
-          <a class="navbar-item" href="/">
-            <h1 class="title is-4">Revision Helper</h1>
-          </a>
-          <a class="navbar-item is-hidden-desktop" href="/create">Create</a>
-          <a class="navbar-item is-hidden-desktop" href="/subjects">Answer</a>
-          {% if session.username %}
-          <a class="navbar-item is-hidden-desktop" href="/user/{{session.username}}">
-            <small>{{session.username}}</small>
-          </a>
-            <a class="navbar-item is-hidden-desktop" href="/logout">
-              Log Out
-            </a>
-          {% else %}
-            <a class="navbar-item is-hidden-desktop" href="/login">Login</a>
-            <a class="navbar-item is-hidden-desktop" href="/signup">Sign Up</a>
-          {% endif %}
-        </div>
-        <div class="navbar-menu">
-          <div class="navbar-start"></div>
-          <div class="navbar-end">
-            {% if session.username %}
-              <a class="navbar-item" href="/user/{{session.username}}">
-                <small>{{session.username}}</small>
-              </a>
-              <a class="navbar-item" href="/logout">
-                Log Out
-              </a>
-            {% else %}
-              <a class="navbar-item" href="/login">Login</a>
-              <a class="navbar-item" href="/signup">Sign Up</a>
-            {% endif %}
-            <div class="navbar-item has-dropdown">
-              <a class="navbar-link">
-                Revise!
-              </a>
-              <div class="navbar-dropdown">
-                <a class="navbar-item" href="/create">Create</a>
-                <a class="navbar-item" href="/subjects">Answer</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
 
-    <div class="spacing"></div>
+	<head>
+		<meta charset="utf-8">
+		<title>Revision Helper</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css">
+		<link rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+		<script src="{{url_for('static', filename='js/markdown.js')}}"></script>
+		<script>
+			MathJax = {
+				tex: {
+					inlineMath: [['$', '$'], ['\\(', '\\)']]
+				},
+				svg: {
+					fontCache: 'global'
+				}
+			};
+		</script>
+		<script type="text/javascript" id="MathJax-script" async
+			src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+			</script>
+		{% block head %}{% endblock %}
+	</head>
 
-    {% block body %}{% endblock %}
+	<body onload="markdown()">
+		<nav class="navbar is-fixed-top" role="navigation" aria-label-"main navigation">
+			<div class="container">
+				<div class="navbar-brand">
+					<a class="navbar-item" href="/">
+						<h1 class="title is-4">Revision Helper</h1>
+					</a>
+					<a class="navbar-item is-hidden-desktop" href="/create">Create</a>
+					<a class="navbar-item is-hidden-desktop" href="/subjects">Answer</a>
+					{% if session.username %}
+					<a class="navbar-item is-hidden-desktop" href="/user/{{session.username}}">
+						<small>{{session.username}}</small>
+					</a>
+					<a class="navbar-item is-hidden-desktop" href="/logout">
+						Log Out
+					</a>
+					{% else %}
+					<a class="navbar-item is-hidden-desktop" href="/login">Login</a>
+					<a class="navbar-item is-hidden-desktop" href="/signup">Sign Up</a>
+					{% endif %}
+				</div>
+				<div class="navbar-menu">
+					<div class="navbar-start"></div>
+					<div class="navbar-end">
+						{% if session.username %}
+						<a class="navbar-item" href="/user/{{session.username}}">
+							<small>{{session.username}}</small>
+						</a>
+						<a class="navbar-item" href="/logout">
+							Log Out
+						</a>
+						{% else %}
+						<a class="navbar-item" href="/login">Login</a>
+						<a class="navbar-item" href="/signup">Sign Up</a>
+						{% endif %}
+						<div class="navbar-item has-dropdown">
+							<a class="navbar-link">
+								Revise!
+							</a>
+							<div class="navbar-dropdown">
+								<a class="navbar-item" href="/create">Create</a>
+								<a class="navbar-item" href="/subjects">Answer</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
 
-    <script type="text/javascript">
-      var $dropdowns = document.querySelectorAll('.navbar-item.has-dropdown:not(.is-hoverable)');
+		<div class="spacing"></div>
 
-      if ($dropdowns.length > 0) {
-        $dropdowns.forEach(function ($el) {
-          $el.addEventListener('click', function (event) {
-            event.stopPropagation();
-            $el.classList.toggle('is-active');
-          });
-        });
+		{% block body %}{% endblock %}
 
-        document.addEventListener('click', function (event) {
-          closeDropdowns();
-        });
-      }
+		<script type="text/javascript">
+			var $dropdowns = document.querySelectorAll('.navbar-item.has-dropdown:not(.is-hoverable)');
 
-      function closeDropdowns() {
-        $dropdowns.forEach(function ($el) {
-          $el.classList.remove('is-active');
-        });
-      }
-    </script>
-  </body>
+			if ($dropdowns.length > 0) {
+				$dropdowns.forEach(function ($el) {
+					$el.addEventListener('click', function (event) {
+						event.stopPropagation();
+						$el.classList.toggle('is-active');
+					});
+				});
+
+				document.addEventListener('click', function (event) {
+					closeDropdowns();
+				});
+			}
+
+			function closeDropdowns() {
+				$dropdowns.forEach(function ($el) {
+					$el.classList.remove('is-active');
+				});
+			}
+		</script>
+	</body>
+
 </html>
